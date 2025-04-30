@@ -1,4 +1,4 @@
-module github.com/asaka1234/go_myfatoorah
+module github.com/asaka1234/go-myfatoorah
 
 go 1.24.2
 
