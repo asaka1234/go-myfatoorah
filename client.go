@@ -1,17 +1,28 @@
 package go_myfatoorah
 
-import "github.com/go-resty/resty/v2"
+import (
+	"github.com/asaka1234/go-myfatoorah/utils"
+	"github.com/go-resty/resty/v2"
+)
 
 type Client struct {
-	Token    string
-	BaseURL  string
+	Merchant           string
+	AccessKey          string
+	DepositUrl         string
+	DepositCallbackUrl string
+
 	ryClient *resty.Client
+	logger   utils.Logger
 }
 
-func NewClient(token string, baseURL string) *Client {
+func NewClient(logger utils.Logger, merchantID string, accessKey string, depositUrl, depositCallbackUrl string) *Client {
 	return &Client{
-		Token:    token,
-		BaseURL:  baseURL,
+		Merchant:           merchantID,
+		AccessKey:          accessKey,
+		DepositUrl:         depositUrl,
+		DepositCallbackUrl: depositCallbackUrl,
+
 		ryClient: resty.New(), //client实例
+		logger:   logger,
 	}
 }
