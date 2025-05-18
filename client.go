@@ -13,6 +13,7 @@ type Client struct {
 
 	ryClient *resty.Client
 	logger   utils.Logger
+	signUtil *utils.SignatureUtils
 }
 
 func NewClient(logger utils.Logger, merchantID string, accessKey string, depositUrl, depositCallbackUrl string) *Client {
@@ -24,6 +25,7 @@ func NewClient(logger utils.Logger, merchantID string, accessKey string, deposit
 
 		ryClient: resty.New(), //client实例
 		logger:   logger,
+		signUtil: utils.NewSignatureUtils(logger),
 	}
 }
 
