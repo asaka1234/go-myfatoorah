@@ -44,7 +44,7 @@ func (cli *Client) DepositCallback(req MyFatoorahDepositBackReq, processor func(
 	backServiceKey := cli.AccessKey
 
 	// Generate and validate signature
-	if !cli.signUtil.ValidateSignature(dataMap, backServiceKey, req.signature) {
+	if !cli.signUtil.ValidateSignature(dataMap, backServiceKey, req.Signature) {
 		log.Printf("Invalid signature")
 		return errors.New("Invalid signature")
 	}

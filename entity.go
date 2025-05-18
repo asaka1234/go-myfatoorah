@@ -96,8 +96,8 @@ type MyFatoorahDepositBackReq struct {
 	DateTime       string                        `json:"DateTime"`
 	CountryIsoCode string                        `json:"CountryIsoCode"`
 	Data           *MyFatoorahDepositBackReqData `json:"Data"`
-	// Signature field is not in the JSON structure but exists in the Java class
-	signature string // Unexported since setter doesn't expose it
+	// Signature from header MyFatoorah-Signature
+	Signature string
 }
 
 type MyFatoorahDepositBackReqData struct {
