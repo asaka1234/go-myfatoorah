@@ -122,3 +122,34 @@ type MyFatoorahDepositBackReqData struct {
 	InvoiceValueInPayCurrency     string  `json:"InvoiceValueInPayCurrency"`
 	PayCurrency                   string  `json:"PayCurrency"`
 }
+
+//------------
+
+type MyFatoorahDepositBackRsp struct {
+	IsSuccess        bool                          `json:"IsSuccess"`
+	Message          string                        `json:"Message"`
+	ValidationErrors interface{}                   `json:"ValidationErrors"` // Using interface{} to handle any type
+	Data             *MyFatoorahDepositBackRspData `json:"Data"`
+}
+
+type MyFatoorahDepositBackRspData struct {
+	InvoiceId           int           `json:"InvoiceId"`
+	InvoiceStatus       string        `json:"InvoiceStatus"`
+	InvoiceReference    string        `json:"InvoiceReference"`
+	CustomerReference   *string       `json:"CustomerReference"` // Pointer for nullable field
+	CreatedDate         time.Time     `json:"CreatedDate"`       // Using time.Time for datetime
+	ExpiryDate          string        `json:"ExpiryDate"`        // Keeping as string for custom format
+	ExpiryTime          string        `json:"ExpiryTime"`        // Keeping as string for custom format
+	InvoiceValue        float64       `json:"InvoiceValue"`
+	Comments            *string       `json:"Comments"` // Pointer for nullable field
+	CustomerName        string        `json:"CustomerName"`
+	CustomerMobile      string        `json:"CustomerMobile"`
+	CustomerEmail       *string       `json:"CustomerEmail"`    // Pointer for nullable field
+	UserDefinedField    *string       `json:"UserDefinedField"` // Pointer for nullable field
+	InvoiceDisplayValue string        `json:"InvoiceDisplayValue"`
+	DueDeposit          float64       `json:"DueDeposit"`
+	DepositStatus       string        `json:"DepositStatus"`
+	InvoiceItems        []interface{} `json:"InvoiceItems"`
+	InvoiceTransactions []interface{} `json:"InvoiceTransactions"` // Using interface{} for unknown structure
+	Suppliers           []interface{} `json:"Suppliers"`           // Using interface{} for unknown structure
+}
