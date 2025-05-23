@@ -4,44 +4,38 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
+	"errors"
+	"fmt"
+	"github.com/samber/lo"
+	"github.com/spf13/cast"
 	"sort"
 	"strings"
 )
 
-type SignatureUtils struct {
-	logger Logger
-}
-
-func NewSignatureUtils(logger Logger) *SignatureUtils {
-	return &SignatureUtils{logger: logger}
-}
-
-// callback的数据的签名
-func (s *SignatureUtils) GenerateSignature(data map[string]string, key string) (string, error) {
-	// 1. Sort the data keys case-insensitively
-	keys := make([]string, 0, len(data))
-	for k := range data {
-		keys = append(keys, k)
+// 针对webhook回调的签名验证
+// https://docs.myfatoorah.com/docs/webhook-signature
+func Sign(params map[string]interface{}, key string) (string, error) {
+	// 1. Validate key
+	if key == "" {
+		return "", errors.New("APP_KEY 参数为空，请填写")
 	}
 
-	sort.Slice(keys, func(i, j int) bool {
-		return strings.ToLower(keys[i]) < strings.ToLower(keys[j])
-	})
+	// 2. Get and sort keys
+	keys := lo.Keys(params)
+	sort.Strings(keys) // ASCII ascending order
 
-	// 2. Create a string from the sorted data
-	var dataString strings.Builder
+	// 3. Build sign string
+	var sb strings.Builder
 	for _, k := range keys {
-		v := data[k]
-		if v != "" { // In Go, empty string is the zero value
-			dataString.WriteString(k)
-			dataString.WriteString("=")
-			dataString.WriteString(v)
-			dataString.WriteString(",")
+		value := cast.ToString(params[k])
+		if value != "" {
+			//只有非空才可以参与签名
+			sb.WriteString(fmt.Sprintf("%s=%s,", k, value))
 		}
 	}
 
 	// Remove the trailing comma
-	str := dataString.String()
+	str := sb.String()
 	if len(str) > 0 {
 		str = str[:len(str)-1]
 	}
@@ -55,12 +49,12 @@ func (s *SignatureUtils) GenerateSignature(data map[string]string, key string) (
 	return base64.StdEncoding.EncodeToString(hashBytes), nil
 }
 
-func (s *SignatureUtils) ValidateSignature(data map[string]string, key, signature string) bool {
-	generatedSignature, err := s.GenerateSignature(data, key)
+// 验证签名
+func Verify(data map[string]interface{}, key, signature string) bool {
+	generatedSignature, err := Sign(data, key)
 	if err != nil {
-		s.logger.Errorf("Error generating signature: %v", err)
+		fmt.Errorf("Error generating signature: %v", err)
 		return false
 	}
-
 	return generatedSignature == signature
 }

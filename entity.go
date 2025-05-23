@@ -6,7 +6,7 @@ import "time"
 
 /**
  * {
- *     "CustomerName": "larry",
+ *     "CustomerName": "cy",
  *     "NotificationOption": "LNK",
  *     "DisplayCurrencyIso": "KWD",
  *     "MobileCountryCode": "+971",
@@ -18,15 +18,16 @@ import "time"
  */
 type MyFatoorahDepositReq struct {
 	//must
-	InvoiceValue       float64 `json:"InvoiceValue"` // using float64 for decimal numbers
-	CustomerName       string  `json:"CustomerName"`
-	NotificationOption string  `json:"NotificationOption"`
+	InvoiceValue       float64 `json:"InvoiceValue"`       // 支付金额
+	CustomerName       string  `json:"CustomerName"`       //merchant的客户名字
+	NotificationOption string  `json:"NotificationOption"` //枚举, EML,SMS,LNK,ALL  (应该选用LNK :returns the invoice link through the response body only)
 	//option
-	DisplayCurrencyIso string    `json:"DisplayCurrencyIso"`
+	DisplayCurrencyIso string    `json:"DisplayCurrencyIso"`          //币种
 	MobileCountryCode  string    `json:"MobileCountryCode,omitempty"` // marked as optional
-	ExpiryDate         time.Time `json:"ExpiryDate"`
-	CallBackUrl        string    `json:"CallBackUrl"`
-	Language           string    `json:"Language"`
+	ExpiryDate         time.Time `json:"ExpiryDate"`                  //The date you want the invoice link to expire
+	CallBackUrl        string    `json:"CallBackUrl"`                 //TODO 应该是前端跳转地址
+	Language           string    `json:"Language"`                    //EN,AR (Arabic)
+	//WebhookUrl         string    `json:"WebhookUrl"`                  //结果通知.  这个是一个单独补充, 正常是dashboard后台设置的.
 }
 
 /**
@@ -51,7 +52,7 @@ type MyFatoorahDepositRsp struct {
 }
 
 type MyFatoorahDepositData struct {
-	InvoiceId         int     `json:"InvoiceId"`
+	InvoiceId         int     `json:"InvoiceId"` //psp三方的订单id
 	InvoiceURL        string  `json:"InvoiceURL"`
 	CustomerReference *string `json:"CustomerReference"` // Using pointer to allow null
 	UserDefinedField  *string `json:"UserDefinedField"`  // Using pointer to allow null
@@ -90,37 +91,38 @@ type MyFatoorahDepositData struct {
  *    }
  * }
  */
+//https://docs.myfatoorah.com/docs/webhook-v1   版本v1
 type MyFatoorahDepositBackReq struct {
-	EventType      int                           `json:"EventType"`
-	Event          string                        `json:"Event"`
-	DateTime       string                        `json:"DateTime"`
+	EventType      int                           `json:"EventType"` // 枚举：1 For Transaction Status Changed, 2 For Refund Status Changed, 3 For Balance Transferred, 4 For Supplier Status Changed, 5 For Recurring Status Changed
+	Event          string                        `json:"Event"`     // 枚举：TransactionsStatusChanged,RefundStatusChanged,BalanceTransferred,SupplierStatusChanged
+	DateTime       string                        `json:"DateTime"`  // ddMMyyyyHHmmss
 	CountryIsoCode string                        `json:"CountryIsoCode"`
 	Data           *MyFatoorahDepositBackReqData `json:"Data"`
 	// Signature from header MyFatoorah-Signature
-	Signature string
+	//Signature string
 }
 
 type MyFatoorahDepositBackReqData struct {
-	InvoiceId                     int     `json:"InvoiceId"`
-	InvoiceReference              string  `json:"InvoiceReference"`
-	CreatedDate                   string  `json:"CreatedDate"`
-	CustomerReference             *string `json:"CustomerReference"`
-	CustomerName                  string  `json:"CustomerName"`
-	CustomerMobile                string  `json:"CustomerMobile"`
-	CustomerEmail                 string  `json:"CustomerEmail"`
-	TransactionStatus             string  `json:"TransactionStatus"`
-	PaymentMethod                 string  `json:"PaymentMethod"`
-	UserDefinedField              *string `json:"UserDefinedField"`
-	ReferenceId                   string  `json:"ReferenceId"`
-	TrackId                       string  `json:"TrackId"`
-	PaymentId                     string  `json:"PaymentId"`
-	AuthorizationId               string  `json:"AuthorizationId"`
-	InvoiceValueInBaseCurrency    string  `json:"InvoiceValueInBaseCurrency"`
-	BaseCurrency                  string  `json:"BaseCurrency"`
-	InvoiceValueInDisplayCurrency string  `json:"InvoiceValueInDisplayCurreny"` // Note: Typo in JSON field name preserved
-	DisplayCurrency               string  `json:"DisplayCurrency"`
-	InvoiceValueInPayCurrency     string  `json:"InvoiceValueInPayCurrency"`
-	PayCurrency                   string  `json:"PayCurrency"`
+	InvoiceId                     int     `json:"InvoiceId" mapstructure:"InvoiceId"`
+	InvoiceReference              string  `json:"InvoiceReference" mapstructure:"InvoiceReference"`
+	CreatedDate                   string  `json:"CreatedDate" mapstructure:"CreatedDate"` //ddMMyyyyHHmmss
+	CustomerReference             *string `json:"CustomerReference" mapstructure:"CustomerReference"`
+	CustomerName                  string  `json:"CustomerName" mapstructure:"CustomerName"`
+	CustomerMobile                string  `json:"CustomerMobile" mapstructure:"CustomerMobile"`
+	CustomerEmail                 string  `json:"CustomerEmail" mapstructure:"CustomerEmail"`
+	TransactionStatus             string  `json:"TransactionStatus" mapstructure:"TransactionStatus"` //枚举： SUCCESS, FAILED,CANCELED,AUTHORIZE
+	PaymentMethod                 string  `json:"PaymentMethod" mapstructure:"PaymentMethod"`
+	UserDefinedField              *string `json:"UserDefinedField" mapstructure:"UserDefinedField"`
+	ReferenceId                   string  `json:"ReferenceId" mapstructure:"ReferenceId"`
+	TrackId                       string  `json:"TrackId" mapstructure:"TrackId"`
+	PaymentId                     string  `json:"PaymentId" mapstructure:"PaymentId"`
+	AuthorizationId               string  `json:"AuthorizationId" mapstructure:"AuthorizationId"`
+	InvoiceValueInBaseCurrency    string  `json:"InvoiceValueInBaseCurrency" mapstructure:"InvoiceValueInBaseCurrency"`
+	BaseCurrency                  string  `json:"BaseCurrency" mapstructure:"BaseCurrency"`
+	InvoiceValueInDisplayCurrency string  `json:"InvoiceValueInDisplayCurreny" mapstructure:"InvoiceValueInDisplayCurreny"` // Note: Typo in JSON field name preserved
+	DisplayCurrency               string  `json:"DisplayCurrency" mapstructure:"DisplayCurrency"`
+	InvoiceValueInPayCurrency     string  `json:"InvoiceValueInPayCurrency" mapstructure:"InvoiceValueInPayCurrency"`
+	PayCurrency                   string  `json:"PayCurrency" mapstructure:"PayCurrency"` //币种
 }
 
 //------------
@@ -132,6 +134,7 @@ type MyFatoorahDepositBackRsp struct {
 	Data             *MyFatoorahDepositBackRspData `json:"Data"`
 }
 
+// TODO 感觉完全用不到
 type MyFatoorahDepositBackRspData struct {
 	InvoiceId           int           `json:"InvoiceId"`
 	InvoiceStatus       string        `json:"InvoiceStatus"`

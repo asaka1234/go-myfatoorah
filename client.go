@@ -7,29 +7,30 @@ import (
 
 type Client struct {
 	Merchant           string
-	AccessKey          string
+	ApiToken           string
+	BackKey            string
 	DepositUrl         string
 	DepositCallbackUrl string
 
 	ryClient *resty.Client
 	logger   utils.Logger
-	signUtil *utils.SignatureUtils
 }
 
-func NewClient(logger utils.Logger, merchantID string, accessKey string, depositUrl, depositCallbackUrl string) *Client {
+func NewClient(logger utils.Logger, merchantID string, apiToken string, backKey string, depositUrl, depositCallbackUrl string) *Client {
 	return &Client{
 		Merchant:           merchantID,
-		AccessKey:          accessKey,
+		ApiToken:           apiToken,
+		BackKey:            backKey,
 		DepositUrl:         depositUrl,
 		DepositCallbackUrl: depositCallbackUrl,
 
 		ryClient: resty.New(), //client实例
 		logger:   logger,
-		signUtil: utils.NewSignatureUtils(logger),
 	}
 }
 
-func (cli *Client) SetMerchantInfo(merchantId, accessKey string) {
+func (cli *Client) SetMerchantInfo(merchantId, apiToken, backKey string) {
 	cli.Merchant = merchantId
-	cli.AccessKey = accessKey
+	cli.ApiToken = apiToken
+	cli.BackKey = backKey
 }

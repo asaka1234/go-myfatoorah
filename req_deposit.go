@@ -1,15 +1,11 @@
 package go_myfatoorah
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"time"
+	"crypto/tls"
 )
 
-// 下单(充值/提现是同一个接口)
+// https://docs.myfatoorah.com/docs/send-payment
+// https://apitest.myfatoorah.com/swagger/ui/index#!/Payment/Payment_SendPayment
 func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, error) {
 
 	/**
@@ -29,7 +25,7 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 	 * 'https://apitest.myfatoorah.com/v2/SendPayment'
 	 */
 
-	rawURL := cli.DepositUrl + "/v2/SendPayment"
+	rawURL := cli.DepositUrl
 
 	// Prepare request body
 	requestBody := map[string]interface{}{
@@ -43,60 +39,23 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 		// "CallBackUrl":      backUrl,
 	}
 
-	// Convert request body to JSON
-	jsonBody, err := json.Marshal(requestBody)
+	//----------------------
+	var result MyFatoorahDepositRsp
+
+	_, err := cli.ryClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
+		SetCloseConnection(true).
+		R().
+		SetBody(requestBody).
+		SetHeaders(getAuthHeaders(cli.ApiToken)).
+		SetResult(&result).
+		SetError(&result).
+		Post(rawURL)
+
+	//fmt.Printf("result: %s\n", string(resp.Body()))
+
 	if err != nil {
-		return nil, fmt.Errorf("error marshaling request body: %v", err)
+		return nil, err
 	}
 
-	// Determine access key based on currency
-	accessKey := cli.AccessKey
-
-	// Create HTTP request
-	httpReq, err := http.NewRequest("POST", rawURL, bytes.NewBuffer(jsonBody))
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %v", err)
-	}
-
-	// Set headers
-	httpReq.Header.Set("Content-Type", "application/json")
-	httpReq.Header.Set("Accept", "application/json")
-	httpReq.Header.Set("Authorization", "bearer "+accessKey)
-
-	// Log request (you might want to use a proper logging library)
-	cli.logger.Infof("MyFatoorah Deposit request: %+v, headers: %+v\n", requestBody, httpReq.Header)
-
-	// Send request
-	client := &http.Client{Timeout: 30 * time.Second}
-	resp, err := client.Do(httpReq)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	// Read response
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response: %v", err)
-	}
-
-	// Parse response
-	var rsp MyFatoorahDepositRsp
-	err = json.Unmarshal(body, &rsp)
-	if err != nil {
-		return nil, fmt.Errorf("error parsing response: %v", err)
-	}
-
-	// Handle non-successful responses
-	if !rsp.IsSuccess {
-		// Try to extract validation errors
-		var errorResponse struct {
-			ValidationErrors *string `json:"ValidationErrors"`
-		}
-		if err := json.Unmarshal(body, &errorResponse); err == nil {
-			rsp.ValidationErrors = errorResponse.ValidationErrors
-		}
-	}
-
-	return &rsp, nil
+	return &result, nil
 }
