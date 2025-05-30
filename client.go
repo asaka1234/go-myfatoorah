@@ -6,7 +6,7 @@ import (
 )
 
 type Client struct {
-	params MyFatoorahInitParams
+	Params MyFatoorahInitParams
 
 	ryClient *resty.Client
 	logger   utils.Logger
@@ -14,7 +14,7 @@ type Client struct {
 
 func NewClient(logger utils.Logger, params MyFatoorahInitParams) *Client {
 	return &Client{
-		params: params,
+		Params: params,
 
 		ryClient: resty.New(), //client实例
 		logger:   logger,
@@ -22,7 +22,7 @@ func NewClient(logger utils.Logger, params MyFatoorahInitParams) *Client {
 }
 
 func (cli *Client) SetMerchantInfo(merchantId, apiToken, backKey string) {
-	cli.params.Merchant = merchantId
-	cli.params.ApiToken = apiToken
-	cli.params.BackKey = backKey
+	cli.Params.Merchant = merchantId
+	cli.Params.ApiToken = apiToken
+	cli.Params.BackKey = backKey
 }
