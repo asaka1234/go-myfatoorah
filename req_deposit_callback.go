@@ -20,7 +20,7 @@ func (cli *Client) DepositCallback(req MyFatoorahDepositBackReq, sign string, pr
 
 	// Generate and validate signature
 	// 注意: 这里要在psp后台先打开这个设置
-	if !utils.Verify(params, cli.BackKey, sign) {
+	if !utils.Verify(params, cli.params.BackKey, sign) {
 		log.Printf("Invalid signature")
 		return errors.New("Invalid signature")
 	}

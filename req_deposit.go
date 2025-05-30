@@ -25,7 +25,7 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 	 * 'https://apitest.myfatoorah.com/v2/SendPayment'
 	 */
 
-	rawURL := cli.DepositUrl
+	rawURL := cli.params.DepositUrl
 
 	// Prepare request body
 	requestBody := map[string]interface{}{
@@ -46,7 +46,7 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 		SetCloseConnection(true).
 		R().
 		SetBody(requestBody).
-		SetHeaders(getAuthHeaders(cli.ApiToken)).
+		SetHeaders(getAuthHeaders(cli.params.ApiToken)).
 		SetResult(&result).
 		SetError(&result).
 		Post(rawURL)

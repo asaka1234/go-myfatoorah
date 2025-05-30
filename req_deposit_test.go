@@ -9,7 +9,7 @@ import (
 func TestDeposit(t *testing.T) {
 
 	//构造client
-	cli := NewClient(nil, MERCHANT, API_TOKEN, BACK_KEY, DEPOSIT_URL, DEPOSIT_CALLBACK_URL)
+	cli := NewClient(nil, MyFatoorahInitParams{MERCHANT, API_TOKEN, BACK_KEY, DEPOSIT_URL, DEPOSIT_CALLBACK_URL})
 
 	//发请求
 	resp, err := cli.Deposit(GenDepositRequestDemo())
