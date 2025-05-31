@@ -21,8 +21,6 @@ func NewClient(logger utils.Logger, params MyFatoorahInitParams) *Client {
 	}
 }
 
-func (cli *Client) SetMerchantInfo(merchantId, apiToken, backKey string) {
-	cli.Params.Merchant = merchantId
-	cli.Params.ApiToken = apiToken
-	cli.Params.BackKey = backKey
+func (cli *Client) SetMerchantInfo(merchant MerchantInfo) {
+	cli.Params.MerchantInfo = merchant
 }

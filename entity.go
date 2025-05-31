@@ -3,11 +3,15 @@ package go_myfatoorah
 import "time"
 
 type MyFatoorahInitParams struct {
-	Merchant           string `json:"merchant" mapstructure:"merchant"`
-	ApiToken           string `json:"apiToken" mapstructure:"apiToken"`
-	BackKey            string `json:"backKey" mapstructure:"backKey"`
-	DepositUrl         string `json:"depositUrl" mapstructure:"depositUrl"`
-	DepositCallbackUrl string `json:"depositCallbackUrl" mapstructure:"depositCallbackUrl"`
+	MerchantInfo
+	DepositUrl         string `json:"depositUrl" mapstructure:"depositUrl" config:"depositUrl"`
+	DepositCallbackUrl string `json:"depositCallbackUrl" mapstructure:"depositCallbackUrl" config:"depositCallbackUrl"`
+}
+
+type MerchantInfo struct {
+	MerchantId string `json:"MerchantId" mapstructure:"MerchantId" config:"MerchantId"`
+	ApiToken   string `json:"apiToken" mapstructure:"apiToken" config:"apiToken"`
+	BackKey    string `json:"backKey" mapstructure:"backKey" config:"backKey"`
 }
 
 // ----------generate invoice link-------------------------
