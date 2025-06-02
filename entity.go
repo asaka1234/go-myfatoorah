@@ -4,14 +4,14 @@ import "time"
 
 type MyFatoorahInitParams struct {
 	MerchantInfo
-	DepositUrl         string `json:"depositUrl" mapstructure:"depositUrl" config:"depositUrl"`
-	DepositCallbackUrl string `json:"depositCallbackUrl" mapstructure:"depositCallbackUrl" config:"depositCallbackUrl"`
+	DepositUrl         string `json:"depositUrl" mapstructure:"depositUrl" config:"depositUrl"  yaml:"depositUrl"`
+	DepositCallbackUrl string `json:"depositCallbackUrl" mapstructure:"depositCallbackUrl" config:"depositCallbackUrl"  yaml:"depositCallbackUrl"`
 }
 
 type MerchantInfo struct {
-	MerchantId string `json:"MerchantId" mapstructure:"MerchantId" config:"MerchantId"`
-	ApiToken   string `json:"apiToken" mapstructure:"apiToken" config:"apiToken"`
-	BackKey    string `json:"backKey" mapstructure:"backKey" config:"backKey"`
+	MerchantId string `json:"MerchantId" mapstructure:"merchantId" config:"merchantId"  yaml:"merchantId"`
+	ApiToken   string `json:"apiToken" mapstructure:"apiToken" config:"apiToken"  yaml:"apiToken"`
+	BackKey    string `json:"backKey" mapstructure:"backKey" config:"backKey"  yaml:"backKey"`
 }
 
 // ----------generate invoice link-------------------------
