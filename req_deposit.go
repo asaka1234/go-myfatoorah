@@ -51,6 +51,8 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 		SetError(&result).
 		Post(rawURL)
 
+	cli.logger.Infof("sdk=>url:%s, err:%+v\n", rawURL, err)
+
 	//fmt.Printf("result: %s\n", string(resp.Body()))
 
 	if err != nil {
