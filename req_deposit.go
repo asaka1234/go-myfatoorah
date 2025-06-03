@@ -2,13 +2,14 @@ package go_myfatoorah
 
 import (
 	"crypto/tls"
+	"github.com/mitchellh/mapstructure"
 )
 
 // https://docs.myfatoorah.com/docs/send-payment
 // https://apitest.myfatoorah.com/swagger/ui/index#!/Payment/Payment_SendPayment
 func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, error) {
 
-	cli.logger.Infof("sdk==>deposit, req:%+v", req)
+	cli.logger.Infof("go_myfatoorah==>deposit, req:%+v", req)
 
 	/**
 	 * curl -X POST \
@@ -29,17 +30,12 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 
 	rawURL := cli.Params.DepositUrl
 
-	// Prepare request body
-	requestBody := map[string]interface{}{
-		"CustomerName":       req.CustomerName,
-		"NotificationOption": req.NotificationOption,
-		"DisplayCurrencyIso": req.DisplayCurrencyIso,
-		"InvoiceValue":       req.InvoiceValue,
-		"Language":           "en",
-		// Uncomment these if needed
-		// "ExpiryDate":       req.ExpiryDate,
-		// "CallBackUrl":      backUrl,
-	}
+	var params map[string]interface{}
+	mapstructure.Decode(req, &params)
+
+	params["NotificationOption"] = "LNK"
+	params["WebhookUrl"] = cli.Params.DepositCallbackUrl //指定webhook, 这样会直接走这个
+	params["Language"] = "EN"                            //临时写死
 
 	//----------------------
 	var result MyFatoorahDepositRsp
@@ -47,13 +43,13 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 	resp, err := cli.ryClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
 		SetCloseConnection(true).
 		R().
-		SetBody(requestBody).
+		SetBody(params).
 		SetHeaders(getAuthHeaders(cli.Params.ApiToken)).
 		SetResult(&result).
 		SetError(&result).
 		Post(rawURL)
 
-	cli.logger.Infof("sdk==>url:%s, err:%+v, body:%s", rawURL, err, resp.Body())
+	cli.logger.Infof("go_myfatoorah==>url:%s, err:%+v, body:%s", rawURL, err, resp.Body())
 
 	//fmt.Printf("result: %s\n", string(resp.Body()))
 

@@ -15,7 +15,7 @@ Doc
 
 回调地址
 ==============
-在psp端指定的callback地址, 所以无法在pre-order中动态指定
+可以在接口中指定webhook, 指定了的话就走指定的，否则就走portal里设置的.
 
 
 Payment Process

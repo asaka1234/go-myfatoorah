@@ -30,16 +30,19 @@ type MerchantInfo struct {
  */
 type MyFatoorahDepositReq struct {
 	//must
-	InvoiceValue       float64 `json:"InvoiceValue"`       // 支付金额
-	CustomerName       string  `json:"CustomerName"`       //merchant的客户名字
-	NotificationOption string  `json:"NotificationOption"` //枚举, EML,SMS,LNK,ALL  (应该选用LNK :returns the invoice link through the response body only)
+	InvoiceValue float64 `json:"InvoiceValue"  mapstructure:"InvoiceValue"` // 支付金额
+	CustomerName string  `json:"CustomerName"  mapstructure:"CustomerName"` //merchant的客户名字
 	//option
-	DisplayCurrencyIso string    `json:"DisplayCurrencyIso"`          //币种
-	MobileCountryCode  string    `json:"MobileCountryCode,omitempty"` // marked as optional
-	ExpiryDate         time.Time `json:"ExpiryDate"`                  //The date you want the invoice link to expire
-	CallBackUrl        string    `json:"CallBackUrl"`                 //TODO 应该是前端跳转地址
-	Language           string    `json:"Language"`                    //EN,AR (Arabic)
-	//WebhookUrl         string    `json:"WebhookUrl"`                  //结果通知.  这个是一个单独补充, 正常是dashboard后台设置的.
+	DisplayCurrencyIso string `json:"DisplayCurrencyIso"  mapstructure:"DisplayCurrencyIso"` //币种
+	//MobileCountryCode  string    `json:"MobileCountryCode,omitempty"` // marked as optional
+	//ExpiryDate  time.Time `json:"ExpiryDate"`  //The date you want the invoice link to expire
+	//CallBackUrl string `json:"CallBackUrl"` //TODO 应该是前端跳转地址
+
+	//以下让sdk来设置
+	//NotificationOption string `json:"NotificationOption"` //枚举, EML,SMS,LNK,ALL  (应该选用LNK :returns the invoice link through the response body only)
+	//WebhookUrl string `json:"WebhookUrl"` //结果通知.  这个是一个单独补充, 正常是dashboard后台设置的.
+	//Language string `json:"Language"` //EN,AR (Arabic)
+
 }
 
 /**
