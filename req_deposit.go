@@ -8,6 +8,8 @@ import (
 // https://apitest.myfatoorah.com/swagger/ui/index#!/Payment/Payment_SendPayment
 func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, error) {
 
+	cli.logger.Infof("sdk==>deposit, req:%+v", req)
+
 	/**
 	 * curl -X POST \
 	 * --header 'Content-Type: application/json' \
@@ -42,7 +44,7 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 	//----------------------
 	var result MyFatoorahDepositRsp
 
-	_, err := cli.ryClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
+	resp, err := cli.ryClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
 		SetCloseConnection(true).
 		R().
 		SetBody(requestBody).
@@ -51,7 +53,7 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 		SetError(&result).
 		Post(rawURL)
 
-	cli.logger.Infof("sdk=>url:%s, err:%+v\n", rawURL, err)
+	cli.logger.Infof("sdk==>url:%s, err:%+v, body:%s", rawURL, err, resp.Body())
 
 	//fmt.Printf("result: %s\n", string(resp.Body()))
 
