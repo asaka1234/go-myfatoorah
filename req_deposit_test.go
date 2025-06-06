@@ -40,8 +40,9 @@ func GenDepositRequestDemo() MyFatoorahDepositReq {
 	return MyFatoorahDepositReq{
 		CustomerName:       "cy",
 		DisplayCurrencyIso: "KWD",
+		CustomerReference:  "2345",
 		//MobileCountryCode:  "+971",
-		InvoiceValue: 50,
+		InvoiceValue: 50.00,
 		//ExpiryDate:   time.Now().AddDate(0, 0, 1),
 		//CallBackUrl:  "https://www.google.com",
 		//Language:     "EN",

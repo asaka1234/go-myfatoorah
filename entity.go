@@ -34,6 +34,7 @@ type MyFatoorahDepositReq struct {
 	CustomerName string  `json:"CustomerName"  mapstructure:"CustomerName"` //merchant的客户名字
 	//option
 	DisplayCurrencyIso string `json:"DisplayCurrencyIso"  mapstructure:"DisplayCurrencyIso"` //币种
+	CustomerReference  string `json:"CustomerReference"  mapstructure:"CustomerReference"`   //商户订单号
 	//MobileCountryCode  string    `json:"MobileCountryCode,omitempty"` // marked as optional
 	//ExpiryDate  time.Time `json:"ExpiryDate"`  //The date you want the invoice link to expire
 	//CallBackUrl string `json:"CallBackUrl"` //TODO 应该是前端跳转地址
@@ -67,10 +68,10 @@ type MyFatoorahDepositRsp struct {
 }
 
 type MyFatoorahDepositData struct {
-	InvoiceId         int     `json:"InvoiceId"` //psp三方的订单id
+	InvoiceId         int     `json:"InvoiceId"` //psp三方的订单id (发票号)
 	InvoiceURL        string  `json:"InvoiceURL"`
-	CustomerReference *string `json:"CustomerReference"` // Using pointer to allow null
-	UserDefinedField  *string `json:"UserDefinedField"`  // Using pointer to allow null
+	CustomerReference *string `json:"CustomerReference"` // 商户订单号
+	UserDefinedField  *string `json:"UserDefinedField"`  // The custom field that you have passed in the request
 }
 
 // ----------webhook-------------------------
@@ -118,10 +119,10 @@ type MyFatoorahDepositBackReq struct {
 }
 
 type MyFatoorahDepositBackReqData struct {
-	InvoiceId                     int     `json:"InvoiceId" mapstructure:"InvoiceId"`
+	InvoiceId                     int     `json:"InvoiceId" mapstructure:"InvoiceId"` //psp订单号(发票号)
 	InvoiceReference              string  `json:"InvoiceReference" mapstructure:"InvoiceReference"`
-	CreatedDate                   string  `json:"CreatedDate" mapstructure:"CreatedDate"` //ddMMyyyyHHmmss
-	CustomerReference             *string `json:"CustomerReference" mapstructure:"CustomerReference"`
+	CreatedDate                   string  `json:"CreatedDate" mapstructure:"CreatedDate"`             //ddMMyyyyHHmmss
+	CustomerReference             string  `json:"CustomerReference" mapstructure:"CustomerReference"` //merchant订单号
 	CustomerName                  string  `json:"CustomerName" mapstructure:"CustomerName"`
 	CustomerMobile                string  `json:"CustomerMobile" mapstructure:"CustomerMobile"`
 	CustomerEmail                 string  `json:"CustomerEmail" mapstructure:"CustomerEmail"`
@@ -154,7 +155,7 @@ type MyFatoorahDepositBackRspData struct {
 	InvoiceId           int           `json:"InvoiceId"`
 	InvoiceStatus       string        `json:"InvoiceStatus"`
 	InvoiceReference    string        `json:"InvoiceReference"`
-	CustomerReference   *string       `json:"CustomerReference"` // Pointer for nullable field
+	CustomerReference   string        `json:"CustomerReference"` // Pointer for nullable field
 	CreatedDate         time.Time     `json:"CreatedDate"`       // Using time.Time for datetime
 	ExpiryDate          string        `json:"ExpiryDate"`        // Keeping as string for custom format
 	ExpiryTime          string        `json:"ExpiryTime"`        // Keeping as string for custom format
