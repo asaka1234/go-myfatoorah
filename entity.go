@@ -3,7 +3,7 @@ package go_myfatoorah
 import "time"
 
 type MyFatoorahInitParams struct {
-	MerchantInfo
+	MerchantInfo       `mapstructure:",squash" yaml:",inline"`
 	DepositUrl         string `json:"depositUrl" mapstructure:"depositUrl" config:"depositUrl"  yaml:"depositUrl"`
 	DepositCallbackUrl string `json:"depositCallbackUrl" mapstructure:"depositCallbackUrl" config:"depositCallbackUrl"  yaml:"depositCallbackUrl"`
 }
