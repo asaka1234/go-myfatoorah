@@ -25,7 +25,7 @@ func TestDeposit(t *testing.T) {
 	vLog := VLog{}
 
 	//构造client
-	cli := NewClient(vLog, MyFatoorahInitParams{MerchantInfo{MERCHANT, API_TOKEN, BACK_KEY}, DEPOSIT_URL, DEPOSIT_CALLBACK_URL})
+	cli := NewClient(vLog, &MyFatoorahInitParams{MerchantInfo{MERCHANT, API_TOKEN, BACK_KEY}, DEPOSIT_URL, DEPOSIT_CALLBACK_URL})
 
 	//发请求
 	resp, err := cli.Deposit(GenDepositRequestDemo())

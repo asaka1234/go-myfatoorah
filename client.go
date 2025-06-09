@@ -6,14 +6,14 @@ import (
 )
 
 type Client struct {
-	Params MyFatoorahInitParams
+	Params *MyFatoorahInitParams
 
 	ryClient  *resty.Client
 	debugMode bool
 	logger    utils.Logger
 }
 
-func NewClient(logger utils.Logger, params MyFatoorahInitParams) *Client {
+func NewClient(logger utils.Logger, params *MyFatoorahInitParams) *Client {
 	return &Client{
 		Params: params,
 
