@@ -45,6 +45,7 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 		R().
 		SetBody(params).
 		SetHeaders(getAuthHeaders(cli.Params.ApiToken)).
+		SetDebug(cli.debugMode).
 		SetResult(&result).
 		SetError(&result).
 		Post(rawURL)
