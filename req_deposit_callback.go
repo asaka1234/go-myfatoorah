@@ -2,6 +2,7 @@ package go_myfatoorah
 
 import (
 	"errors"
+	"fmt"
 	"github.com/asaka1234/go-myfatoorah/utils"
 	"github.com/mitchellh/mapstructure"
 	"log"
@@ -12,6 +13,10 @@ func (cli *Client) DepositCallback(req MyFatoorahDepositBackReq, sign string, pr
 	//1. 获取返回
 	if req.Data == nil {
 		return errors.New("Invalid request")
+	}
+
+	if req.EventType != 1 && req.Event != "TransactionsStatusChanged" {
+		return fmt.Errorf("wrong request eventType:%d, event:%s", req.EventType, req.Event)
 	}
 
 	//自己算一下签名

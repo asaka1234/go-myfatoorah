@@ -112,7 +112,7 @@ type MyFatoorahDepositBackReq struct {
 	EventType      int                           `json:"EventType"  binding:"required"` // 枚举：1 For Transaction Status Changed, 2 For Refund Status Changed, 3 For Balance Transferred, 4 For Supplier Status Changed, 5 For Recurring Status Changed
 	Event          string                        `json:"Event" binding:"required"`      // 枚举：TransactionsStatusChanged,RefundStatusChanged,BalanceTransferred,SupplierStatusChanged
 	DateTime       string                        `json:"DateTime" binding:"required"`   // ddMMyyyyHHmmss
-	CountryIsoCode string                        `json:"CountryIsoCode"`
+	CountryIsoCode string                        `json:"CountryIsoCode"`                //ccy
 	Data           *MyFatoorahDepositBackReqData `json:"Data"`
 	// Signature from header MyFatoorah-Signature
 	//Signature string
@@ -127,10 +127,10 @@ type MyFatoorahDepositBackReqData struct {
 	CustomerMobile                string  `json:"CustomerMobile" mapstructure:"CustomerMobile"`
 	CustomerEmail                 *string `json:"CustomerEmail" mapstructure:"CustomerEmail"`
 	TransactionStatus             string  `json:"TransactionStatus" mapstructure:"TransactionStatus" binding:"required"` //枚举： SUCCESS, FAILED,CANCELED,AUTHORIZE
-	PaymentMethod                 string  `json:"PaymentMethod" mapstructure:"PaymentMethod"`
+	PaymentMethod                 string  `json:"PaymentMethod" mapstructure:"PaymentMethod"`                            //字符串,比如: VISA/MASTER
 	UserDefinedField              *string `json:"UserDefinedField" mapstructure:"UserDefinedField"`
 	ReferenceId                   string  `json:"ReferenceId" mapstructure:"ReferenceId"`
-	TrackId                       string  `json:"TrackId" mapstructure:"TrackId"`
+	TrackId                       string  `json:"TrackId" mapstructure:"TrackId"` //17-06-2025_2793335
 	PaymentId                     string  `json:"PaymentId" mapstructure:"PaymentId"`
 	AuthorizationId               string  `json:"AuthorizationId" mapstructure:"AuthorizationId"`
 	InvoiceValueInBaseCurrency    string  `json:"InvoiceValueInBaseCurrency" mapstructure:"InvoiceValueInBaseCurrency" binding:"required"`
