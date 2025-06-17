@@ -25,13 +25,11 @@ func Sign(params map[string]interface{}, key string) (string, error) {
 	sort.Strings(keys) // ASCII ascending order
 
 	// 3. Build sign string
+	//https://docs.myfatoorah.com/docs/webhook-signature
 	var sb strings.Builder
 	for _, k := range keys {
 		value := cast.ToString(params[k])
-		if value != "" {
-			//只有非空才可以参与签名
-			sb.WriteString(fmt.Sprintf("%s=%s,", k, value))
-		}
+		sb.WriteString(fmt.Sprintf("%s=%s,", k, value))
 	}
 
 	// Remove the trailing comma

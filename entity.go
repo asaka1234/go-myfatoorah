@@ -125,7 +125,7 @@ type MyFatoorahDepositBackReqData struct {
 	CustomerReference             string  `json:"CustomerReference" mapstructure:"CustomerReference"` //merchant订单号
 	CustomerName                  string  `json:"CustomerName" mapstructure:"CustomerName"`
 	CustomerMobile                string  `json:"CustomerMobile" mapstructure:"CustomerMobile"`
-	CustomerEmail                 string  `json:"CustomerEmail" mapstructure:"CustomerEmail"`
+	CustomerEmail                 *string `json:"CustomerEmail" mapstructure:"CustomerEmail"`
 	TransactionStatus             string  `json:"TransactionStatus" mapstructure:"TransactionStatus" binding:"required"` //枚举： SUCCESS, FAILED,CANCELED,AUTHORIZE
 	PaymentMethod                 string  `json:"PaymentMethod" mapstructure:"PaymentMethod"`
 	UserDefinedField              *string `json:"UserDefinedField" mapstructure:"UserDefinedField"`
