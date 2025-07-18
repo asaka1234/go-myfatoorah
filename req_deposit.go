@@ -11,9 +11,6 @@ import (
 // https://docs.myfatoorah.com/docs/send-payment
 // https://apitest.myfatoorah.com/swagger/ui/index#!/Payment/Payment_SendPayment
 func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, error) {
-
-	cli.logger.Infof("go_myfatoorah==>deposit, req:%+v", req)
-
 	/**
 	 * curl -X POST \
 	 * --header 'Content-Type: application/json' \
@@ -54,7 +51,7 @@ func (cli *Client) Deposit(req MyFatoorahDepositReq) (*MyFatoorahDepositRsp, err
 		Post(rawURL)
 
 	restLog, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(utils.GetRestyLog(resp))
-	cli.logger.Infof("PSPResty#myfatoorah#deposit->%+v", string(restLog))
+	cli.logger.Infof("PSPResty#myfatoorah#deposit->%s", string(restLog))
 
 	if err != nil {
 		return nil, err
